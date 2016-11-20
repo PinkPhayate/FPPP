@@ -9,6 +9,14 @@ def fild_all_files(directory):
             # isJava = re.search(full_path, r'(\.java)$')
             isJava = re.search("\.JAVA$",full_path.upper())
             if isJava is not None :
-                list.append(full_path)
-                print full_path
+                list.append(module.Module(full_path))
     return list
+
+root = '/Users/phayate/src/ApacheDerby/'
+ver = '10.12'
+# get list about files under the repository
+list = fild_all_files(root + ver)
+
+''' test to exist module class '''
+for module in list:
+    print module.filename

@@ -2,10 +2,10 @@ class Module(object):
     def __init__(self, filename):
          self.filename = filename
          self.LOC = int()
-         self.churnMetrics = Float()
-         self.relativeChrun = Float()
-         self.DeletredChurn = Float()
-         self.NCDChurn = Float()
+         self.churnMetrics = float()
+         self.relativeChrun = float()
+         self.DeletredChurn = float()
+         self.NCDChurn = float()
 
     def printfilename():
         print self.filenme
