@@ -1,11 +1,29 @@
 import difflib, re
-def getProcessMetrics(mod, filename):
-    if type (m) != 'module.Module':
-        return
-    # curr_filename = mod.filename
-    curr_filename = '/Users/phayate/src/ApacheDerby/10.11/tools/release/jirasoap/src/main/java/org/apache/derbyBuild/jirasoap/FilteredIssueLister.java'
-    prev_filename = '/Users/phayate/src/ApacheDerby/10.12/tools/release/jirasoap/src/main/java/org/apache/derbyBuild/jirasoap/FilteredIssueLister.java'
-    getDiff(curr_filename, prev_filename)
+import module
+def getProcessMetrics(mod, prev_filename):
+
+    curr_filename = mod.filename
+    # curr_filename = '/Users/phayate/src/ApacheDerby/10.11/tools/release/jirasoap/src/main/java/org/apache/derbyBuild/jirasoap/FilteredIssueLister.java'
+    # prev_filename = '/Users/phayate/src/ApacheDerby/10.12/tools/release/jirasoap/src/main/java/org/apache/derbyBuild/jirasoap/FilteredIssueLister.java'
+    addedLine, deletedLine, modifiedLine = getDiff(curr_filename, prev_filename)
+
+    # pur metrics on the module
+    mod.churnMetrics = addedLine + modifiedLine
+    mod.DeletredChurn = float()
+    if mod.LOC < 1 :
+         mod.LOC = mod.getLoc()
+    mod.relativeChrun = (addedLine + modifiedLine)/ mod.LOC
+    mod.deletredChurn = (addedLine + modifiedLine)/ mod.LOC
+    if deletedLine < 1:
+        mod.ncdChurn = 0
+    else:
+        mod.ncdChurn = ( addedLine+modifiedLine) / deletedLine
+
+    return mod
+
+
+
+
 
 def getDiff(file1, file2):
     f = open(file1, 'r')
@@ -20,15 +38,29 @@ def getDiff(file1, file2):
         curr_text.append(line)
     f.close()
 
-    newline = 0
-
+    p = 0   # +
+    m = 0   # -
+    q = 0   # ?
     for buf in difflib.ndiff(curr_text, prev_text):
-        isChange = re.search("^\+",buf)
-        print buf
-        # if isChange != None:
-        #     print buf
+        isP = re.search("^\+",buf)
+        if isP is not None :
+            p += 1
+        isM = re.search("^\-",buf)
+        if isM is not None :
+            m += 1
+        isQ = re.search("^\?",buf)
+        if isQ is not None :
+            q += 1
 
-	#   print buf
+    addedLine = p - q
+    deletedLine = m-q
+    modifiedLine = q
+
+    return addedLine, deletedLine, modifiedLine
+
+
+
+
 
 
 
@@ -40,4 +72,4 @@ def getDiff(file1, file2):
 
 # getDiff('test-module1.java', 'test-module3.java')
 # getDiff('test-module1.java', 'test-module2.java')
-getDiff('test-module4.txt', 'test-module5.txt')
+# getDiff('test-module4.txt', 'test-module5.txt')

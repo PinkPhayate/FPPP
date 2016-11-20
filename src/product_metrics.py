@@ -1,6 +1,6 @@
 import module
 def getProcuctMetrics(m):
-    if type (m) != 'module.Module':
+    if type (m) !=  module.Module:
         return
     filename = m.filename
     f = open(filename, 'r')

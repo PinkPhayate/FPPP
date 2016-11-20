@@ -5,8 +5,13 @@ class Module(object):
          self.TChar = int()
          self.churnMetrics = float()
          self.relativeChrun = float()
-         self.DeletredChurn = float()
-         self.NCDChurn = float()
+         self.deletredChurn = float()
+         self.ncdChurn = float()
+         self.isNew = 0
 
     def printfilename():
         print self.filenme
+
+    def getLoc():
+        self.LOC = sum(1 for line in open( self.filename ))
+        return self.LOC
