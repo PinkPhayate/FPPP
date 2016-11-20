@@ -11,7 +11,7 @@ def fild_all_files(directory):
             if isJava is not None :
                 list.append(module.Module(full_path))
     return list
-def get_all_filesa_text(directory):
+def get_all_files_text(directory):
     list = []
     for root, dirs, files in os.walk(directory):
         for file_ in files:
@@ -19,7 +19,7 @@ def get_all_filesa_text(directory):
             # isJava = re.search(full_path, r'(\.java)$')
             isJava = re.search("\.JAVA$",full_path.upper())
             if isJava is not None :
-                list.append(module.Module(full_path))
+                list.append(full_path)
     return list
 
 
