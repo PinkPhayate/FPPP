@@ -1,5 +1,5 @@
 import file_operation as fo
-import module
+import module, writer
 import product_metrics as pdm
 import process_metrics as psm
 
@@ -39,5 +39,5 @@ for mod in list:
         else:
             # if not, isNew attribute = 1
             mod.isNew = 1
-
-printModules(list)
+write_csv(list)
+# printModules(list)
