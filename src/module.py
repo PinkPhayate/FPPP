@@ -12,6 +12,7 @@ class Module(object):
     def printfilename():
         print self.filenme
 
-    def getLoc():
-        self.LOC = sum(1 for line in open( self.filename ))
-        return self.LOC
+    # def getLoc():
+    #     # self.LOC = sum(1 for line in open( self.filename ))
+    #     # return self.LOC
+    #     return sum(1 for line in open( self.filename ))

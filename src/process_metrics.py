@@ -11,7 +11,9 @@ def getProcessMetrics(mod, prev_filename):
     mod.churnMetrics = addedLine + modifiedLine
     mod.DeletredChurn = float()
     if mod.LOC < 1 :
-         mod.LOC = mod.getLoc()
+        print mod.filename
+        print mod.LOC
+        mod.LOC = 1
     mod.relativeChrun = (addedLine + modifiedLine)/ mod.LOC
     mod.deletredChurn = (addedLine + modifiedLine)/ mod.LOC
     if deletedLine < 1:

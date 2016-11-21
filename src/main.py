@@ -19,20 +19,25 @@ def printModules(list):
 root = '/Users/phayate/src/ApacheDerby/'
 ver = '10.12'
 prev_ver = '10.11'
-# get list about files under the repository
+
+# files in previous version
+origin_files = fo.get_all_files_text(root + prev_ver)
+# due to find same file under previous version
+transed_files = fo.exchangea_files(origin_files, prev_ver, ver)
+
+# get list about files under current repository
 list = fo.fild_all_files(root + ver)
 for mod in list:
-    print mod.filename
     # get product metrics
     mod = pdm.getProcuctMetrics(mod)
     # find same file from previous version
-    files = fo.get_all_files_text(root + prev_ver)
     if type (mod) ==  module.Module:
-        # if exists, get diff
-        if mod.filename in files:
-            mod = psm.getProcessMetrics(mod, files[ files.index(mod.filename) ])
-        # if not, isNew attribute = 1
+        if mod.filename in transed_files:
+            # if exists, get diff
+            transed_filename = mod.filename.replace(ver, prev_ver)
+            mod = psm.getProcessMetrics(mod, origin_files[ origin_files.index(transed_filename) ])
         else:
+            # if not, isNew attribute = 1
             mod.isNew = 1
 
 printModules(list)
