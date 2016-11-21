@@ -23,7 +23,11 @@ def get_all_files_text(directory):
                 list.append(full_path)
     return list
 
-
+def exchangea_files(files, frm, to):
+    changed_files = []
+    for file in files:
+        changed_files.append( file.replace(frm, to) )
+    return changed_files
 # root = '/Users/phayate/src/ApacheDerby/'
 # ver = '10.12'
 # # get list about files under the repository

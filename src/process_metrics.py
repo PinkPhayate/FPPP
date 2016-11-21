@@ -23,9 +23,11 @@ def getProcessMetrics(mod, prev_filename):
 
 
 
-
-
 def getDiff(file1, file2):
+    """
+    @param file1 curr
+    @param file2 prev
+    """
     f = open(file1, 'r')
     prev_text = []
     for line in f:
@@ -56,6 +58,13 @@ def getDiff(file1, file2):
     deletedLine = m-q
     modifiedLine = q
 
+    if addedLine < 0:
+        print 'addedLine<0: ' + file1
+        addedLine = 0
+    if deletedLine < 0:
+        print 'deletedLine<0: ' + file1
+        deletedLine = 0
+
     return addedLine, deletedLine, modifiedLine
 
 
@@ -72,4 +81,10 @@ def getDiff(file1, file2):
 
 # getDiff('test-module1.java', 'test-module3.java')
 # getDiff('test-module1.java', 'test-module2.java')
-# getDiff('test-module4.txt', 'test-module5.txt')
+def testGetDiff():
+    addedLine, deletedLine, modifiedLine = getDiff('test-data/test-module4.txt', 'test-data/test-module5.txt')
+    # expect -> 0,1,0
+    print addedLine, deletedLine, modifiedLine
+    # actual -> 1,0,0
+
+#    testGetDiff()
