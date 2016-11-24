@@ -1,92 +1,62 @@
-import difflib, re
-import module
+ import difflib, re
+ import module
+ import file_operation as fo
+
 def getProcessMetrics(mod, prev_filename):
 
     curr_filename = mod.filename
-    # curr_filename = '/Users/phayate/src/ApacheDerby/10.11/tools/release/jirasoap/src/main/java/org/apache/derbyBuild/jirasoap/FilteredIssueLister.java'
-    # prev_filename = '/Users/phayate/src/ApacheDerby/10.12/tools/release/jirasoap/src/main/java/org/apache/derbyBuild/jirasoap/FilteredIssueLister.java'
-    addedLine, deletedLine, modifiedLine = getDiff(curr_filename, prev_filename)
+    totalLOC = mod.LOC
 
-    # pur metrics on the module
-    mod.churnMetrics = addedLine + modifiedLine
-    mod.DeletredChurn = float()
-    if mod.LOC < 1 :
-        print mod.filename
-        print mod.LOC
-        mod.LOC = 1
-    mod.relativeChrun = (addedLine + modifiedLine)/ mod.LOC
-    mod.deletredChurn = (addedLine + modifiedLine)/ mod.LOC
-    if deletedLine < 1:
-        mod.ncdChurn = 0
-    else:
-        mod.ncdChurn = ( addedLine+modifiedLine) / deletedLine
+    # convert to list
+    curr = fo.readFile(filename=curr_filename)
+    prev = fo.readFile(filename=prev_filename)
+
+    # measure metrics
+    addedLOC, deletedLOC = getAddDeleteLOC(curr, prev)
+    changedLOC = getChengedLOC(curr, prev)
+
+    # calculate metrics
+    churnedLOC = addedLOC + changedLOC
+
+    # injection metrics
+    mod.M1 = churnedLOC / totalLOC
+    mod.M2 = deletedLOC / totalLOC
+    mod.M6 = churnedLOC + deletedLOC
+    mod.M7 = churnedLOC / deletedLOC
 
     return mod
-
-
-
-def getDiff(file1, file2):
+    
+# get changedLOC
+def getChengedLOC(curr, prev):
     """
-    @param file1 curr
-    @param file2 prev
+    @param list of file1 curr
+    @param list of file2 prev
     """
-    f = open(file1, 'r')
-    prev_text = []
-    for line in f:
-        prev_text.append(line)
-    f.close()
+    changedLOC= 0
+    for line in difflib.context_diff(curr, prev, fromfile='hoge.txt',tofile='fuga.txt'):
+        isE = re.search("^\!",buf)
+        if isE is not None :
+            changedLOC += 1
+    return changedLOC
 
-    f = open(file2, 'r')
-    curr_text = []
-    for line in f:
-        curr_text.append(line)
-    f.close()
 
-    p = 0   # +
-    m = 0   # -
-    q = 0   # ?
-    for buf in difflib.ndiff(curr_text, prev_text):
+
+
+# get addLOC and deletedLOC
+def getAddDeleteLOC(curr, prev):
+    """
+    @param list of file1 curr
+    @param list of file2 prev
+    """
+    addedLOC = 0   # +
+    deletedLOC = 0   # -
+
+    for buf in difflib.ndiff(curr, prev):
         isP = re.search("^\+",buf)
         if isP is not None :
-            p += 1
+            addedLOC += 1
         isM = re.search("^\-",buf)
         if isM is not None :
-            m += 1
-        isQ = re.search("^\?",buf)
-        if isQ is not None :
-            q += 1
+            deletedLOC += 1
 
-    addedLine = p - q
-    deletedLine = m-q
-    modifiedLine = q
-
-    if addedLine < 0:
-        print 'addedLine<0: ' + file1
-        addedLine = 0
-    if deletedLine < 0:
-        print 'deletedLine<0: ' + file1
-        deletedLine = 0
-
-    return addedLine, deletedLine, modifiedLine
-
-
-
-
-
-
-
-''' test'''
-#  no diff
-# curr_filename = '/Users/phayate/src/ApacheDerby/10.11/tools/release/jirasoap/src/main/java/org/apache/derbyBuild/jirasoap/FilteredIssueLister.java'
-# prev_filename = '/Users/phayate/src/ApacheDerby/10.12/tools/release/jirasoap/src/main/java/org/apache/derbyBuild/jirasoap/FilteredIssueLister.java'
-# getDiff(curr_filename, prev_filename)
-
-# getDiff('test-module1.java', 'test-module3.java')
-# getDiff('test-module1.java', 'test-module2.java')
-def testGetDiff():
-    addedLine, deletedLine, modifiedLine = getDiff('test-data/test-module4.txt', 'test-data/test-module5.txt')
-    # expect -> 0,1,0
-    print addedLine, deletedLine, modifiedLine
-    # actual -> 1,0,0
-
-#    testGetDiff()
+    return addedLOC, deletedLOC

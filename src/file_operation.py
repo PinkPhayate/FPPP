@@ -36,3 +36,10 @@ def exchangea_files(files, frm, to):
 # ''' test to exist module class '''
 # for module in list:
 #     print module.filename
+def readFile(filename):
+    f = open(filename, 'r')
+    list = []
+    for line in f:
+        list.append(line)
+    f.close()
+    return list
