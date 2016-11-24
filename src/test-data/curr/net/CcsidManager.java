@@ -22,10 +22,11 @@
 package org.apache.derby.client.net;
 
 import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
+import .CharBuffer;
 import org.apache.derby.client.am.Agent;
 import org.apache.derby.client.am.SqlException;
-
+hogehogehoge
+governing
 // Performs character conversions as required to send and receive PROTOCOL control data.
 // User data uses the JVM's built in converters, i18n.jar,
 
