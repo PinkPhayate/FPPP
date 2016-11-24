@@ -1,34 +1,76 @@
-# get changedLOC
-def getChengedLOC(curr, prev):
-    """
-    @param list of file1 curr
-    @param list of file2 prev
-    """
-    changedLOC= 0
-    for line in difflib.context_diff(curr, prev, fromfile='hoge.txt',tofile='fuga.txt'):
-        isE = re.search("^\!",buf)
-        if isE is not None :
-            changedLOC += 1
-    return changedLOC
+import module
+def getProcuctMetrics(m):
+    if type (m) !=  module.Module:
+        return
+    filename = m.filename
+    f = open(filename, 'r')
+
+    loc = 0
+    tchar = 0
+    cl = 0
+    tcomm = 0
+    mchar = 0
+    dchar = 0
+    isCommenting = False
+
+    for line in f:
+
+        # judge wheter be comment or not
+        line_id = confirmComment(line)
+
+        # if continuing to comment line
+        if isCommenting:
+            line_id = 0
+
+        # if not comment
+        if line_id == 20:
+            # loc += 1
+            # cl += 1
+            tchar += len(line)
+            dchar += len(line)
+
+        # if be comment
+        else:
+            tcomm += 1
+            mchar += 1
+
+            # check status
+            if line_id == 1:
+                isCommenting = True
+            if line_id == 2:
+                isCommenting == False
+
+    f.close()
+    m.LOC = loc
+    m.TChar = tchar
+    m.CL = cl
+    m.TComm = tcomm
+    m.MChar = mchar
+    m.DChar = dchar
+
+    return m
+
+def confirmComment(line):
+    '''
+    return code 0   ->  comment only one    //
+    return code 1   ->  could find start of comment /*
+    return code 2   ->  find  end of comment    */
+    return code 20   ->  script without comment
+    '''
+    if '//' in line:
+        return 0
+    elif '*/' in line:
+        return 2
+    elif '/*' in line:
+        return 1
+    return 20
 
 
+''' test to get loc and tchar'''
+def testGetProductMetrics():
+    filename = '/Users/phayate/src/ApacheDerby/10.12/tools/release/jirasoap/src/main/java/org/apache/derbyBuild/jirasoap/FilteredIssueLister.java'
+    mod = module.Module(filename)
+    mod = getProcuctMetrics(mod)
+    mod.print_metrics()
 
-
-# get addLOC and deletedLOC
-def getAddDeleteLOC(curr, prev):
-    """
-    @param list of file1 curr
-    @param list of file2 prev
-    """
-    addedLOC = 0   # +
-    deletedLOC = 0   # -
-
-    for buf in difflib.ndiff(curr, prev):
-        isP = re.search("^\+",buf)
-        if isP is not None :
-            addedLOC += 1
-        isM = re.search("^\-",buf)
-        if isM is not None :
-            deletedLOC += 1
-            
-    return addedLOC, deletedLOC
+testGetProductMetrics()

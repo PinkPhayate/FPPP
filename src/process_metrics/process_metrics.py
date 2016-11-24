@@ -18,8 +18,9 @@ def getProcessMetrics(mod, prev_filename):
     churnedLOC = addedLOC + changedLOC
 
     # injection metrics
-    mod.M1 = float(churnedLOC) / totalLOC
-    mod.M2 = float(deletedLOC) / totalLOC
+    if totalLOC != 0:
+        mod.M1 = float(churnedLOC) / totalLOC
+        mod.M2 = float(deletedLOC) / totalLOC
     mod.M6 = churnedLOC + deletedLOC
     if deletedLOC != 0:
         mod.M7 = churnedLOC / deletedLOC
