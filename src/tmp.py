@@ -17,11 +17,10 @@ def getProcuctMetrics(m):
 
         # judge wheter be comment or not
         line_id = confirmComment(line)
-
         # if continuing to comment line
         if isCommenting:
             line_id = 0
-
+            print isCommenting
         # if not comment
         if line_id == 20:
             # loc += 1
@@ -57,6 +56,7 @@ def confirmComment(line):
     return code 2   ->  find  end of comment    */
     return code 20   ->  script without comment
     '''
+    print lin
     if '//' in line:
         return 0
     elif '*/' in line:
@@ -71,6 +71,20 @@ def testGetProductMetrics():
     filename = '/Users/phayate/src/ApacheDerby/10.12/tools/release/jirasoap/src/main/java/org/apache/derbyBuild/jirasoap/FilteredIssueLister.java'
     mod = module.Module(filename)
     mod = getProcuctMetrics(mod)
-    mod.print_metrics()
+    print mod.LOC
+    print mod.TChar
+    print mod.CL
+    print mod.TComm
+    print mod.MChar
+    print mod.DChar
+    print mod.M1
+    print mod.M2
+    print mod.M3
+    print mod.M4
+    print mod.M5
+    print mod.M6
+    print mod.M7
+    print mod.M8
+
 
 testGetProductMetrics()
