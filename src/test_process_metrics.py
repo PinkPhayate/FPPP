@@ -1,4 +1,4 @@
-import process_metrics as psm
+from process_metrics import process_metrics as psm
 import product_metrics as pdm
 import module as m
 def printModules(mod):
